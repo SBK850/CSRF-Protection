@@ -5,13 +5,17 @@ const csrf = require('csurf');
 
 const app = express();
 const csrfProtection = csrf({
-    cookie: true,
-    value: (req) => req.headers['csrf-token']  // Ensure this is the header you use in client-side fetch
+    cookie: {
+        httpOnly: true,
+        secure: true,  // Set to true if you're serving your site over HTTPS
+        sameSite: 'Strict'  // Adjust this setting based on your requirements
+    },
+    value: (req) => req.headers['csrf-token']
 });
 
 app.use(cors({
     origin: 'https://main.dc5bz0dk3svjz.amplifyapp.com',
-    credentials: true,  // Necessary for cookies to be included in cross-origin requests
+    credentials: true,
     optionsSuccessStatus: 200
 }));
 
@@ -28,7 +32,7 @@ app.post('/api/process-url', csrfProtection, (req, res) => {
     console.log("Cookies received:", req.cookies);
     try {
         const { url } = req.body;
-        new URL(url); // Validates URL
+        new URL(url);
         console.log('Received valid URL:', url);
         res.status(200).json({ message: 'URL processed successfully' });
     } catch (error) {
