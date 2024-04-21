@@ -22,6 +22,8 @@ app.get('/api/get-csrf-token', csrfProtection, (req, res) => {
 });
 
 app.post('/api/process-url', csrfProtection, (req, res) => {
+    console.log("CSRF Token from header:", req.get('CSRF-Token')); // Log token from header
+    console.log("Cookies received:", req.cookies); // Log received cookies
     try {
         const { url } = req.body;
         // Ensure the URL is valid
