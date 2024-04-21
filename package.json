@@ -1,0 +1,25 @@
+{
+  "name": "cyberguardians-backend",
+  "version": "1.0.0",
+  "description": "Backend for the CyberGuardians platform, handling form submissions and security.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SBK850/CSRF-Protection"
+  },
+  "author": "SBK <seikou850@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "cors": "^2.8.5",
+    "cookie-parser": "^1.4.5",
+    "csurf": "^1.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
