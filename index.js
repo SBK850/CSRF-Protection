@@ -4,11 +4,14 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 
 const app = express();
-const csrfProtection = csrf({ cookie: true });
+const csrfProtection = csrf({
+    cookie: true,
+    value: (req) => req.headers['csrf-token']  // Ensure this is the header you use in client-side fetch
+});
 
 app.use(cors({
     origin: 'https://main.dc5bz0dk3svjz.amplifyapp.com',
-    credentials: true,
+    credentials: true,  // Necessary for cookies to be included in cross-origin requests
     optionsSuccessStatus: 200
 }));
 
@@ -16,18 +19,16 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.static('public'));
 
-// Corrected endpoint
 app.get('/api/get-csrf-token', csrfProtection, (req, res) => {
     res.json({ csrfToken: req.csrfToken() });
 });
 
 app.post('/api/process-url', csrfProtection, (req, res) => {
-    console.log("CSRF Token from header:", req.get('CSRF-Token')); // Log token from header
-    console.log("Cookies received:", req.cookies); // Log received cookies
+    console.log("CSRF Token from header:", req.headers['csrf-token']);
+    console.log("Cookies received:", req.cookies);
     try {
         const { url } = req.body;
-        // Ensure the URL is valid
-        new URL(url);
+        new URL(url); // Validates URL
         console.log('Received valid URL:', url);
         res.status(200).json({ message: 'URL processed successfully' });
     } catch (error) {
